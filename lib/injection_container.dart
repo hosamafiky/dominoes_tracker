@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dominoes_tracker/core/network/firestore_helper.dart';
+import 'package:dominoes_tracker/features/players/domain/usecases/get_player.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/history/presentation/cubit/history_cubit.dart';
@@ -7,6 +8,7 @@ import 'features/players/data/datasources/player_remote_data_source.dart';
 import 'features/players/data/repositories/player_repository_impl.dart';
 import 'features/players/domain/repositories/player_repository.dart';
 import 'features/players/domain/usecases/add_player.dart';
+import 'features/players/domain/usecases/get_player_stats.dart';
 import 'features/players/domain/usecases/get_players.dart';
 import 'features/players/domain/usecases/toggle_player_selection.dart';
 import 'features/players/presentation/cubit/players_cubit.dart';
@@ -57,12 +59,14 @@ Future<void> init() async {
   // Cubit
   sl.registerFactory(() => PlayersCubit(getPlayers: sl(), togglePlayerSelection: sl()));
   sl.registerFactory(() => HistoryCubit(repository: sl()));
-  sl.registerFactory(() => StatsCubit());
+  sl.registerFactory(() => StatsCubit(getPlayer: sl(), getPlayerStats: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => GetPlayers(sl()));
+  sl.registerLazySingleton(() => GetPlayer(sl()));
   sl.registerLazySingleton(() => TogglePlayerSelection(sl()));
   sl.registerLazySingleton(() => AddPlayer(sl()));
+  sl.registerLazySingleton(() => GetPlayerStats(sessionRepository: sl(), playerRepository: sl()));
 
   // Repository
   sl.registerLazySingleton<PlayerRepository>(() => PlayerRepositoryImpl(remoteDataSource: sl()));

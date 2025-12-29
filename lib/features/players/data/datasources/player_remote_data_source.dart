@@ -6,6 +6,7 @@ abstract class PlayerRemoteDataSource {
   Future<List<PlayerModel>> getPlayers();
   Future<void> togglePlayerSelection(String playerId, bool isSelected);
   Future<void> addPlayer(PlayerModel player);
+  Future<PlayerModel> getPlayerById(String playerId);
 }
 
 class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
@@ -26,5 +27,10 @@ class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
   @override
   Future<void> addPlayer(PlayerModel player) async {
     await helper.addDocument(path: 'players', data: player.toFirestore());
+  }
+
+  @override
+  Future<PlayerModel> getPlayerById(String playerId) async {
+    return await helper.getDocument(path: 'players/$playerId', fromFirestore: (data, id) => PlayerModel.fromFirestore(data, id));
   }
 }

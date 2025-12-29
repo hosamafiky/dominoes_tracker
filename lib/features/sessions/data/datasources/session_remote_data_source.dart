@@ -52,6 +52,12 @@ class SessionRemoteDataSourceImpl implements SessionRemoteDataSource {
   @override
   Future<void> addRound(String sessionId, Map<String, dynamic> roundData) async {
     await helper.addDocument(path: 'sessions/$sessionId/rounds', data: roundData);
+    final session = await helper.getDocument(path: 'sessions/$sessionId', fromFirestore: (data, id) => SessionModel.fromFirestore(data, id));
+    final updatedSession = session.copyWith(
+      team1Score: roundData['winningTeamName'] == session.team1Name ? (session.team1Score + roundData['points']).toInt() : session.team1Score,
+      team2Score: roundData['winningTeamName'] == session.team2Name ? (session.team2Score + roundData['points']).toInt() : session.team2Score,
+    );
+    await helper.updateDocument(path: 'sessions/$sessionId', data: updatedSession.toFirestore());
   }
 
   @override

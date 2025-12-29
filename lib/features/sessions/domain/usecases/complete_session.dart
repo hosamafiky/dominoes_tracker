@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../repositories/session_repository.dart';
 
 class CompleteSession {
@@ -5,7 +8,7 @@ class CompleteSession {
 
   CompleteSession(this.repository);
 
-  Future<void> call(String sessionId) async {
-    await repository.completeSession(sessionId);
+  Future<Either<Failure, void>> call(String sessionId) async {
+    return await repository.completeSession(sessionId);
   }
 }

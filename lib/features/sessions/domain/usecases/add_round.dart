@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../repositories/session_repository.dart';
 
 class AddRound {
@@ -5,7 +8,7 @@ class AddRound {
 
   AddRound(this.repository);
 
-  Future<void> call(String sessionId, String winningTeam, int points) async {
-    await repository.addRound(sessionId, winningTeam, points);
+  Future<Either<Failure, void>> call(String sessionId, String winningTeam, int points) async {
+    return await repository.addRound(sessionId, winningTeam, points);
   }
 }

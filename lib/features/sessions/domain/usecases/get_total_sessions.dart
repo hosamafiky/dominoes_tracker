@@ -1,13 +1,14 @@
-import '../../../../core/usecases/usecase.dart';
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../repositories/session_repository.dart';
 
-class GetTotalSessions extends UseCase<int, NoParams> {
+class GetTotalSessions {
   final SessionRepository repository;
 
   GetTotalSessions(this.repository);
 
-  @override
-  Future<int> call(NoParams params) async {
+  Future<Either<Failure, int>> call() async {
     return await repository.getTotalSessionsCount();
   }
 }

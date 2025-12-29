@@ -1,14 +1,15 @@
-import '../../../../core/usecases/usecase.dart';
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../entities/player.dart';
 import '../repositories/player_repository.dart';
 
-class GetPlayers extends UseCase<List<Player>, NoParams> {
+class GetPlayers {
   final PlayerRepository repository;
 
   GetPlayers(this.repository);
 
-  @override
-  Future<List<Player>> call(NoParams params) async {
+  Future<Either<Failure, List<Player>>> call() async {
     return await repository.getPlayers();
   }
 }

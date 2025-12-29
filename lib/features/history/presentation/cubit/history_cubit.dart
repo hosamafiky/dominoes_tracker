@@ -13,11 +13,7 @@ class HistoryCubit extends Cubit<HistoryState> {
 
   Future<void> fetchHistory() async {
     emit(HistoryLoading());
-    try {
-      final history = await repository.getSessionHistory();
-      emit(HistoryLoaded(history));
-    } catch (e) {
-      emit(HistoryError(e.toString()));
-    }
+    final result = await repository.getSessionHistory();
+    result.fold((failure) => emit(HistoryError(failure.message)), (history) => emit(HistoryLoaded(history)));
   }
 }

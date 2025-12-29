@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/usecase_status.dart';
@@ -22,18 +23,18 @@ class SessionSummaryPage extends StatelessWidget {
                 _buildSliverAppBar(context),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(20.dg),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildWinnerSection(context, session),
-                        const SizedBox(height: 32),
+                        32.h.verticalSpace,
                         _buildMVPSection(context), // Placeholder for now
-                        const SizedBox(height: 32),
+                        32.h.verticalSpace,
                         _buildFunStatsSection(context), // Placeholder for now
-                        const SizedBox(height: 32),
+                        32.h.verticalSpace,
                         _buildFinalRankings(context, session),
-                        const SizedBox(height: 120), // Bottom padding
+                        120.h.verticalSpace, // Bottom padding
                       ],
                     ),
                   ),
@@ -50,14 +51,16 @@ class SessionSummaryPage extends StatelessWidget {
 
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 200,
+      expandedHeight: 200.h,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [AppTheme.primary, AppTheme.backgroundDark], begin: Alignment.topCenter, end: Alignment.bottomCenter),
           ),
-          child: const Center(child: Icon(Icons.emoji_events_rounded, size: 80, color: AppTheme.accentGold)),
+          child: Center(
+            child: Icon(Icons.emoji_events_rounded, size: 80.sp, color: AppTheme.accentGold),
+          ),
         ),
       ),
       leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
@@ -70,19 +73,19 @@ class SessionSummaryPage extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          const Text(
+          Text(
             'WINNER',
-            style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, letterSpacing: 2),
+            style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, letterSpacing: 2.sp),
           ),
-          const SizedBox(height: 8),
+          8.h.verticalSpace,
           Text(
             winner,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900, color: Colors.white),
           ),
-          const SizedBox(height: 4),
+          4.h.verticalSpace,
           Text(
             '${session.team1Score} - ${session.team2Score}',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
+            style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: AppTheme.accentGold),
           ),
         ],
       ),
@@ -93,35 +96,38 @@ class SessionSummaryPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'MVP OF THE SESSION',
-          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
+          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12.sp),
         ),
-        const SizedBox(height: 16),
+        16.h.verticalSpace,
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16.dg),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppTheme.accentGold.withOpacity(0.3)),
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: AppTheme.accentGold.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
-              const CircleAvatar(
-                radius: 30,
+              CircleAvatar(
+                radius: 30.r,
                 backgroundColor: AppTheme.accentGold,
-                child: Icon(Icons.person, size: 40, color: Colors.black),
+                child: Icon(Icons.person, size: 40.sp, color: Colors.black),
               ),
-              const SizedBox(width: 16),
-              const Column(
+              16.w.horizontalSpace,
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('John Doe', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('45 points contributed', style: TextStyle(color: Colors.grey)),
+                  Text(
+                    'John Doe',
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  ),
+                  const Text('45 points contributed', style: TextStyle(color: Colors.grey)),
                 ],
               ),
               const Spacer(),
-              const Icon(Icons.workspace_premium, color: AppTheme.accentGold, size: 32),
+              Icon(Icons.workspace_premium, color: AppTheme.accentGold, size: 32.sp),
             ],
           ),
         ),
@@ -133,15 +139,15 @@ class SessionSummaryPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'FUN STATS',
-          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
+          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12.sp),
         ),
-        const SizedBox(height: 16),
+        16.h.verticalSpace,
         Row(
           children: [
             Expanded(child: _buildStatCard('Most Wins', 'Sarah Miller', Icons.trending_up)),
-            const SizedBox(width: 16),
+            16.w.horizontalSpace,
             Expanded(child: _buildStatCard('The Brick', 'Mike Ross', Icons.block, color: Colors.red)),
           ],
         ),
@@ -151,15 +157,18 @@ class SessionSummaryPage extends StatelessWidget {
 
   Widget _buildStatCard(String title, String name, IconData icon, {Color color = AppTheme.primary}) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
+      padding: EdgeInsets.all(16.dg),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(16.r)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 12),
-          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[400])),
-          const SizedBox(height: 4),
+          Icon(icon, color: color, size: 24.sp),
+          12.h.verticalSpace,
+          Text(
+            title,
+            style: TextStyle(fontSize: 12.sp, color: Colors.grey[400]),
+          ),
+          4.h.verticalSpace,
           Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
@@ -176,13 +185,13 @@ class SessionSummaryPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'FINAL RANKINGS',
-          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
+          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 12.sp),
         ),
-        const SizedBox(height: 16),
+        16.h.verticalSpace,
         _buildRankingItem(1, teams[0]['name'] as String, teams[0]['score'] as int, true),
-        const SizedBox(height: 12),
+        12.h.verticalSpace,
         _buildRankingItem(2, teams[1]['name'] as String, teams[1]['score'] as int, false),
       ],
     );
@@ -190,21 +199,24 @@ class SessionSummaryPage extends StatelessWidget {
 
   Widget _buildRankingItem(int rank, String name, int score, bool isWinner) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        border: Border.all(color: isWinner ? AppTheme.primary.withOpacity(0.3) : Colors.white.withOpacity(0.1)),
-        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isWinner ? AppTheme.primary.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.1)),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           Text(
             '#$rank',
-            style: TextStyle(fontWeight: FontWeight.bold, color: isWinner ? AppTheme.primary : Colors.grey),
+            style: TextStyle(fontWeight: FontWeight.bold, color: isWinner ? AppTheme.primary : Colors.grey, fontSize: 14.sp),
           ),
-          const SizedBox(width: 16),
+          16.w.horizontalSpace,
           Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
           const Spacer(),
-          Text(score.toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            score.toString(),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -212,10 +224,10 @@ class SessionSummaryPage extends StatelessWidget {
 
   Widget _buildBottomActions(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 30.h),
+      decoration: BoxDecoration(
         color: AppTheme.backgroundDark,
-        boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 40, offset: Offset(0, -10))],
+        boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 40.r, offset: Offset(0, -10.h))],
       ),
       child: Row(
         children: [
@@ -228,8 +240,8 @@ class SessionSummaryPage extends StatelessWidget {
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,
                 side: const BorderSide(color: Colors.white24),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
               ),
               child: const Text('END SESSION'),
             ),
@@ -243,8 +255,8 @@ class SessionSummaryPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primary,
                 foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                padding: EdgeInsets.symmetric(vertical: 16.h),
               ),
             ),
           ),

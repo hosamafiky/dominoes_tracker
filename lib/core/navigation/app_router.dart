@@ -24,8 +24,16 @@ class AppRouter {
         builder: (context, state) => BlocProvider(create: (context) => di.sl<PlayersCubit>(), child: const PlayersPage()),
       ),
       GoRoute(
-        path: '/player-stats',
-        builder: (context, state) => BlocProvider(create: (context) => di.sl<StatsCubit>()..loadPlayerStats('uncle_tony'), child: const PlayerStatsPage()),
+        path: '/player-stats/:playerId',
+        builder: (context, state) {
+          final playerID = state.pathParameters['playerId']!.substring(1);
+          return BlocProvider(
+            create: (context) => di.sl<StatsCubit>()
+              ..loadPlayer(playerID)
+              ..loadPlayerStats(playerID),
+            child: const PlayerStatsPage(),
+          );
+        },
       ),
       GoRoute(
         path: '/session-setup',

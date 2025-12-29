@@ -5,20 +5,13 @@ class Player extends Equatable {
   final String name;
   final String? avatarUrl;
   final bool isSelected;
-  final bool isActive;
 
-  const Player({required this.id, required this.name, this.avatarUrl, this.isSelected = false, this.isActive = true});
+  const Player({required this.id, required this.name, this.avatarUrl, this.isSelected = false});
 
-  Player copyWith({String? id, String? name, String? avatarUrl, bool? isSelected, bool? isActive}) {
-    return Player(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      isSelected: isSelected ?? this.isSelected,
-      isActive: isActive ?? this.isActive,
-    );
+  Player copyWith({String? id, String? name, String? avatarUrl, bool? isSelected}) {
+    return Player(id: id ?? this.id, name: name ?? this.name, avatarUrl: avatarUrl ?? this.avatarUrl, isSelected: isSelected ?? this.isSelected);
   }
 
   @override
-  List<Object?> get props => [id, name, avatarUrl, isSelected, isActive];
+  List<Object?> get props => [id, name, avatarUrl, isSelected];
 }

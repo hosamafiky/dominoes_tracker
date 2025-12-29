@@ -1,6 +1,7 @@
 import 'package:dominoes_tracker/features/sessions/presentation/cubit/session_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/usecase_status.dart';
@@ -22,12 +23,14 @@ class SplashScreen extends StatelessWidget {
               children: [
                 // Background Pattern (Subtle dots)
                 Positioned.fill(
-                  child: CustomPaint(painter: DotPatternPainter(color: AppTheme.primary.withOpacity(isDark ? 0.05 : 0.03))),
+                  child: CustomPaint(
+                    painter: DotPatternPainter(color: AppTheme.primary.withValues(alpha: isDark ? 0.05 : 0.03)),
+                  ),
                 ),
                 // Content Wrapper
                 SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
                     child: Column(
                       children: [
                         const Spacer(flex: 1),
@@ -43,35 +46,30 @@ class SplashScreen extends StatelessWidget {
                                 children: [
                                   // Glow Effect
                                   Container(
-                                    width: 200,
-                                    height: 200,
+                                    width: 200.w,
+                                    height: 200.h,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32),
+                                      borderRadius: BorderRadius.circular(32.r),
                                       boxShadow: [
-                                        BoxShadow(color: AppTheme.primary.withOpacity(0.25), blurRadius: 40, spreadRadius: 10),
-                                        BoxShadow(color: AppTheme.accentGold.withOpacity(0.15), blurRadius: 40, spreadRadius: 5),
+                                        BoxShadow(color: AppTheme.primary.withValues(alpha: 0.25), blurRadius: 40.r, spreadRadius: 10.r),
+                                        BoxShadow(color: AppTheme.accentGold.withValues(alpha: 0.15), blurRadius: 40.r, spreadRadius: 5.r),
                                       ],
                                     ),
                                   ),
                                   // Logo Image
                                   Container(
-                                    width: 192,
-                                    height: 192,
+                                    width: 192.w,
+                                    height: 192.h,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32),
-                                      border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
-                                      image: const DecorationImage(
-                                        image: NetworkImage(
-                                          'https://lh3.googleusercontent.com/aida-public/AB6AXuCkrV5AZPhCp_BBpyl6f1ouuwRdmWLoDhFWJjI536GP-WvYd6xLoPoX9Kti_RkPjkWouFARNi8-IEoragh-GyenQQjrOWCwQYrL095vxTHxthkMtwrufVkMdKhI2PS0Z9lnSpI8Nk3RopqiiEBDa3gkviVdJgRiuuy3H_cSLaRGUEDAZnGgdmGKUuP1G4j6NmKXKYlUraPmlWHcBQyN4fBEQN5J_4HYCc0MHEGJ5YRiHEKYwClNSeBG4xyaXOCgSirBLB6gLxfwGG6A',
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+                                      borderRadius: BorderRadius.circular(32.r),
+                                      image: DecorationImage(image: AssetImage('assets/images/lighting_domino.png'), fit: BoxFit.cover),
+                                      border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1.w),
+                                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20.r, offset: Offset(0, 10.h))],
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 32),
+                              32.verticalSpace,
                               // Text Content
                               Column(
                                 children: [
@@ -91,13 +89,13 @@ class SplashScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
+                                  12.verticalSpace,
                                   Text(
                                     'Track scores. Switch teams.\nPlay fast.',
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: (isDark ? Colors.white : AppTheme.textDark).withOpacity(0.6),
+                                      color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -117,27 +115,25 @@ class SplashScreen extends StatelessWidget {
                               label: 'START NEW SESSION',
                               isPrimary: true,
                             ),
-                            const SizedBox(height: 16),
+                            16.verticalSpace,
                             // Secondary Action
                             _ActionButton(onPressed: () {}, icon: Icons.history_rounded, label: 'SESSION HISTORY', isPrimary: false),
-                            const SizedBox(height: 24),
+                            24.verticalSpace,
                             // Footer Stats
                             BlocBuilder<SessionCubit, SessionState>(
                               builder: (context, state) {
-                                print(state.count);
-
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                                   decoration: BoxDecoration(
-                                    color: isDark ? Colors.black.withOpacity(0.2) : Colors.white.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withOpacity(0.05)),
+                                    color: isDark ? Colors.black.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.5),
+                                    borderRadius: BorderRadius.circular(100.r),
+                                    border: Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.1)),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(Icons.emoji_events_rounded, color: AppTheme.accentGold, size: 20),
-                                      const SizedBox(width: 8),
+                                      Icon(Icons.emoji_events_rounded, color: AppTheme.accentGold, size: 20.sp),
+                                      8.horizontalSpace,
                                       RichText(
                                         text: TextSpan(
                                           children: [
@@ -145,7 +141,7 @@ class SplashScreen extends StatelessWidget {
                                               text: 'Total Sessions Played: ',
                                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                 fontWeight: FontWeight.w600,
-                                                color: (isDark ? Colors.white : AppTheme.textDark).withOpacity(0.5),
+                                                color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.5),
                                               ),
                                             ),
                                             TextSpan(
@@ -193,26 +189,30 @@ class _ActionButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         child: Container(
-          height: isPrimary ? 64 : 56,
+          height: isPrimary ? 64.h : 56.h,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: isPrimary ? AppTheme.primary : (isDark ? Colors.white.withOpacity(0.05) : AppTheme.textDark.withOpacity(0.05)),
-            borderRadius: BorderRadius.circular(16),
-            border: isPrimary ? null : Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withOpacity(0.1)),
-            boxShadow: isPrimary ? [BoxShadow(color: AppTheme.primary.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 4))] : null,
+            color: isPrimary ? AppTheme.primary : (isDark ? Colors.white.withValues(alpha: 0.05) : AppTheme.textDark.withValues(alpha: 0.05)),
+            borderRadius: BorderRadius.circular(16.r),
+            border: isPrimary ? null : Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.1)),
+            boxShadow: isPrimary ? [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.3), blurRadius: 20.r, offset: Offset(0, 4.h))] : null,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: isPrimary ? 28 : 24, color: isPrimary ? AppTheme.backgroundDark : (isPrimary ? null : AppTheme.primary.withOpacity(0.8))),
-              const SizedBox(width: 12),
+              Icon(
+                icon,
+                size: isPrimary ? 28.sp : 24.sp,
+                color: isPrimary ? AppTheme.backgroundDark : (isPrimary ? null : AppTheme.primary.withValues(alpha: 0.8)),
+              ),
+              12.horizontalSpace,
               Text(
                 label,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
+                  letterSpacing: 1.2.sp,
                   color: isPrimary ? AppTheme.backgroundDark : (isDark ? Colors.white : AppTheme.textDark),
                 ),
               ),

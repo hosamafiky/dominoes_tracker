@@ -1,10 +1,13 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../entities/session.dart';
 
 abstract class SessionRepository {
-  Future<int> getTotalSessionsCount();
-  Future<List<Session>> getSessionHistory();
-  Stream<Session> watchSession(String sessionId);
-  Future<String> startSession(Session session);
-  Future<void> addRound(String sessionId, String winningTeam, int points);
-  Future<void> completeSession(String sessionId);
+  Future<Either<Failure, int>> getTotalSessionsCount();
+  Future<Either<Failure, List<Session>>> getSessionHistory();
+  Stream<Either<Failure, Session>> watchSession(String sessionId);
+  Future<Either<Failure, String>> startSession(Session session);
+  Future<Either<Failure, void>> addRound(String sessionId, String winningTeam, int points);
+  Future<Either<Failure, void>> completeSession(String sessionId);
 }

@@ -10,13 +10,13 @@ class PlayerStats extends Equatable {
   final String nemesis;
 
   const PlayerStats({
-    required this.totalGames,
-    required this.wins,
-    required this.losses,
-    required this.winRate,
-    required this.currentStreak,
-    required this.bestPartner,
-    required this.nemesis,
+    this.totalGames = 0,
+    this.wins = 0,
+    this.losses = 0,
+    this.winRate = 0.0,
+    this.currentStreak = 0,
+    this.bestPartner = 'Partner Name',
+    this.nemesis = 'Nemesis Name',
   });
 
   @override

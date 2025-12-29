@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -26,13 +27,21 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [BlocProvider(create: (context) => di.sl<PlayersCubit>())],
-      child: MaterialApp.router(
-        title: 'Domino Tracker',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.dark,
-        routerConfig: AppRouter.router,
+      child: ScreenUtilInit(
+        designSize: const Size(390, 884),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        ensureScreenSize: true,
+        builder: (context, child) {
+          return MaterialApp.router(
+            title: 'Domino Tracker',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.dark,
+            routerConfig: AppRouter.router,
+          );
+        },
       ),
     );
   }

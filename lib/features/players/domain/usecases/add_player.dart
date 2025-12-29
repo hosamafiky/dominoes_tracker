@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/failures.dart';
 import '../entities/player.dart';
 import '../repositories/player_repository.dart';
 
@@ -6,7 +9,7 @@ class AddPlayer {
 
   AddPlayer(this.repository);
 
-  Future<void> call(Player player) async {
-    return await repository.addPlayer(player);
+  Future<Either<Failure, void>> call(Player params) async {
+    return await repository.addPlayer(params);
   }
 }
