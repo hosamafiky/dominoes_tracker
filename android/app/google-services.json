@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402828636648",
+    "project_id": "dominoes-tracker-hussam",
+    "storage_bucket": "dominoes-tracker-hussam.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402828636648:android:a70bcbff46b15fcaedf45d",
+        "android_client_info": {
+          "package_name": "com.example.dominoes_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLFVB0Sc2yXj2nESXMSRwyGEH8f3YrONQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
