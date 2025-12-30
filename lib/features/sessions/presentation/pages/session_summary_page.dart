@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/usecase_status.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -235,7 +234,7 @@ class SessionSummaryPage extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () {
                 context.read<SessionCubit>().finishSession();
-                context.go('/');
+                Navigator.popUntil(context, (route) => route.settings.name == '/');
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.white,

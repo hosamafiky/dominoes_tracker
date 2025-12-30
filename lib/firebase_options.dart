@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'dominoes-tracker-hussam.firebasestorage.app',
     iosBundleId: 'com.example.dominoesTracker',
   );
+
 }

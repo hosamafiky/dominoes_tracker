@@ -57,13 +57,24 @@ class FirestoreHelper {
     });
   }
 
-  Future<String> addDocument({required String path, required Map<String, dynamic> data}) async {
-    final docRef = await firestore.collection(path).add(data);
-    return docRef.id;
+  Future<T> addDocument<T>({
+    required String path,
+    required Map<String, dynamic> data,
+    required T Function(Map<String, dynamic> data, String id) fromFirestore,
+  }) async {
+    return await firestore.collection(path).add(data).then((docRef) async {
+      return await getDocument(path: docRef.path, fromFirestore: fromFirestore);
+    });
   }
 
-  Future<void> updateDocument({required String path, required Map<String, dynamic> data}) async {
-    await firestore.doc(path).update(data);
+  Future<T> updateDocument<T>({
+    required String path,
+    required Map<String, dynamic> data,
+    required T Function(Map<String, dynamic> data, String id) fromFirestore,
+  }) async {
+    return await firestore.doc(path).update(data).then((_) async {
+      return await getDocument(path: path, fromFirestore: fromFirestore);
+    });
   }
 
   Future<void> setDocument({required String path, required Map<String, dynamic> data, bool merge = true}) async {

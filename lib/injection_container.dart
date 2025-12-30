@@ -20,6 +20,7 @@ import 'features/sessions/domain/usecases/add_round.dart';
 import 'features/sessions/domain/usecases/complete_session.dart';
 import 'features/sessions/domain/usecases/get_total_sessions.dart';
 import 'features/sessions/domain/usecases/start_session.dart';
+import 'features/sessions/domain/usecases/watch_rounds.dart';
 import 'features/sessions/domain/usecases/watch_session.dart';
 import 'features/sessions/presentation/cubit/session_cubit.dart';
 
@@ -35,6 +36,7 @@ Future<void> init() async {
       startSessionUseCase: sl(),
       addRoundUseCase: sl(),
       watchSessionUseCase: sl(),
+      watchRoundsUseCase: sl(),
       completeSessionUseCase: sl(),
       getPlayersUseCase: sl(),
       addPlayerUseCase: sl(),
@@ -46,6 +48,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => StartSession(sl()));
   sl.registerLazySingleton(() => AddRound(sl()));
   sl.registerLazySingleton(() => WatchSession(sl()));
+  sl.registerLazySingleton(() => WatchRounds(sl()));
   sl.registerLazySingleton(() => CompleteSession(sl()));
 
   // Repository

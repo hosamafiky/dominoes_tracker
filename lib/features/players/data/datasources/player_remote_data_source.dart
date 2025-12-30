@@ -4,15 +4,15 @@ import '../models/player_model.dart';
 
 abstract class PlayerRemoteDataSource {
   Future<List<PlayerModel>> getPlayers();
-  Future<void> togglePlayerSelection(String playerId, bool isSelected);
-  Future<void> addPlayer(PlayerModel player);
+  Future<PlayerModel> togglePlayerSelection(String playerId, bool isSelected);
+  Future<PlayerModel> addPlayer(PlayerModel player);
   Future<PlayerModel> getPlayerById(String playerId);
 }
 
 class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
   final FirestoreHelper helper;
 
-  PlayerRemoteDataSourceImpl({required this.helper});
+  const PlayerRemoteDataSourceImpl({required this.helper});
 
   @override
   Future<List<PlayerModel>> getPlayers() async {
@@ -20,13 +20,17 @@ class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
   }
 
   @override
-  Future<void> togglePlayerSelection(String playerId, bool isSelected) async {
-    await helper.updateDocument(path: 'players/$playerId', data: {'isSelected': isSelected});
+  Future<PlayerModel> togglePlayerSelection(String playerId, bool isSelected) async {
+    return await helper.updateDocument(
+      path: 'players/$playerId',
+      data: {'isSelected': isSelected},
+      fromFirestore: (data, id) => PlayerModel.fromFirestore(data, id),
+    );
   }
 
   @override
-  Future<void> addPlayer(PlayerModel player) async {
-    await helper.addDocument(path: 'players', data: player.toFirestore());
+  Future<PlayerModel> addPlayer(PlayerModel player) async {
+    return await helper.addDocument(path: 'players', data: player.toFirestore(), fromFirestore: (data, id) => PlayerModel.fromFirestore(data, id));
   }
 
   @override

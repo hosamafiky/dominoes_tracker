@@ -7,13 +7,16 @@ class SessionState extends Equatable {
     this.addRoundStatus = UseCaseStatus.initial,
     this.watchSessionStatus = UseCaseStatus.initial,
     this.completeSessionStatus = UseCaseStatus.initial,
+    this.roundsStatus = UseCaseStatus.initial,
     this.countError,
     this.sessionError,
     this.addRoundError,
     this.watchSessionError,
     this.completeSessionError,
+    this.roundsError,
     this.count = 0,
     this.session,
+    this.rounds = const [],
   });
 
   final UseCaseStatus countStatus;
@@ -21,15 +24,18 @@ class SessionState extends Equatable {
   final UseCaseStatus addRoundStatus;
   final UseCaseStatus watchSessionStatus;
   final UseCaseStatus completeSessionStatus;
+  final UseCaseStatus roundsStatus;
 
   final String? countError;
   final String? sessionError;
   final String? addRoundError;
   final String? watchSessionError;
   final String? completeSessionError;
+  final String? roundsError;
 
   final int count;
   final Session? session;
+  final List<Round> rounds;
 
   SessionState copyWith({
     UseCaseStatus? countStatus,
@@ -44,6 +50,9 @@ class SessionState extends Equatable {
     String? completeSessionError,
     int? count,
     Session? session,
+    UseCaseStatus? roundsStatus,
+    String? roundsError,
+    List<Round>? rounds,
   }) {
     return SessionState(
       countStatus: countStatus ?? this.countStatus,
@@ -58,6 +67,9 @@ class SessionState extends Equatable {
       completeSessionError: completeSessionError ?? this.completeSessionError,
       count: count ?? this.count,
       session: session ?? this.session,
+      roundsStatus: roundsStatus ?? this.roundsStatus,
+      roundsError: roundsError ?? this.roundsError,
+      rounds: rounds ?? this.rounds,
     );
   }
 
@@ -75,5 +87,8 @@ class SessionState extends Equatable {
     completeSessionError,
     count,
     session,
+    roundsStatus,
+    roundsError,
+    rounds,
   ];
 }

@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/enums/usecase_status.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../injection_container.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -14,161 +13,158 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return BlocProvider(
-      create: (context) => sl<SessionCubit>()..loadSessionsCount(),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            body: Stack(
-              children: [
-                // Background Pattern (Subtle dots)
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: DotPatternPainter(color: AppTheme.primary.withValues(alpha: isDark ? 0.05 : 0.03)),
-                  ),
+    return Builder(
+      builder: (context) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              // Background Pattern (Subtle dots)
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: DotPatternPainter(color: AppTheme.primary.withValues(alpha: isDark ? 0.05 : 0.03)),
                 ),
-                // Content Wrapper
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
-                    child: Column(
-                      children: [
-                        const Spacer(flex: 1),
-                        // Hero Section
-                        Expanded(
-                          flex: 8,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Logo Container
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  // Glow Effect
-                                  Container(
-                                    width: 200.w,
-                                    height: 200.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32.r),
-                                      boxShadow: [
-                                        BoxShadow(color: AppTheme.primary.withValues(alpha: 0.25), blurRadius: 40.r, spreadRadius: 10.r),
-                                        BoxShadow(color: AppTheme.accentGold.withValues(alpha: 0.15), blurRadius: 40.r, spreadRadius: 5.r),
-                                      ],
-                                    ),
-                                  ),
-                                  // Logo Image
-                                  Container(
-                                    width: 192.w,
-                                    height: 192.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(32.r),
-                                      image: DecorationImage(image: AssetImage('assets/images/lighting_domino.png'), fit: BoxFit.cover),
-                                      border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1.w),
-                                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20.r, offset: Offset(0, 10.h))],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              32.verticalSpace,
-                              // Text Content
-                              Column(
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'Domino ',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800, color: isDark ? Colors.white : AppTheme.textDark),
-                                        ),
-                                        TextSpan(
-                                          text: 'Tracker',
-                                          style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800, color: AppTheme.primary),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  12.verticalSpace,
-                                  Text(
-                                    'Track scores. Switch teams.\nPlay fast.',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.6),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Actions Section
-                        Column(
+              ),
+              // Content Wrapper
+              SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                  child: Column(
+                    children: [
+                      const Spacer(flex: 1),
+                      // Hero Section
+                      Expanded(
+                        flex: 8,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Primary Action
-                            _ActionButton(
-                              onPressed: () {
-                                context.push('/players');
-                              },
-                              icon: Icons.play_circle_filled_rounded,
-                              label: 'START NEW SESSION',
-                              isPrimary: true,
-                            ),
-                            16.verticalSpace,
-                            // Secondary Action
-                            _ActionButton(onPressed: () {}, icon: Icons.history_rounded, label: 'SESSION HISTORY', isPrimary: false),
-                            24.verticalSpace,
-                            // Footer Stats
-                            BlocBuilder<SessionCubit, SessionState>(
-                              builder: (context, state) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                            // Logo Container
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Glow Effect
+                                Container(
+                                  width: 200.w,
+                                  height: 200.h,
                                   decoration: BoxDecoration(
-                                    color: isDark ? Colors.black.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.5),
-                                    borderRadius: BorderRadius.circular(100.r),
-                                    border: Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.1)),
+                                    borderRadius: BorderRadius.circular(32.r),
+                                    boxShadow: [
+                                      BoxShadow(color: AppTheme.primary.withValues(alpha: 0.25), blurRadius: 40.r, spreadRadius: 10.r),
+                                      BoxShadow(color: AppTheme.accentGold.withValues(alpha: 0.15), blurRadius: 40.r, spreadRadius: 5.r),
+                                    ],
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
+                                ),
+                                // Logo Image
+                                Container(
+                                  width: 192.w,
+                                  height: 192.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(32.r),
+                                    image: DecorationImage(image: AssetImage('assets/images/lighting_domino.png'), fit: BoxFit.cover),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 1.w),
+                                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20.r, offset: Offset(0, 10.h))],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            32.verticalSpace,
+                            // Text Content
+                            Column(
+                              children: [
+                                RichText(
+                                  text: TextSpan(
                                     children: [
-                                      Icon(Icons.emoji_events_rounded, color: AppTheme.accentGold, size: 20.sp),
-                                      8.horizontalSpace,
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Total Sessions Played: ',
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.5),
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: "${state.countStatus == UseCaseStatus.success ? state.count : '...'}",
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppTheme.textDark),
-                                            ),
-                                          ],
-                                        ),
+                                      TextSpan(
+                                        text: 'Domino ',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800, color: isDark ? Colors.white : AppTheme.textDark),
+                                      ),
+                                      TextSpan(
+                                        text: 'Tracker',
+                                        style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800, color: AppTheme.primary),
                                       ),
                                     ],
                                   ),
-                                );
-                              },
+                                ),
+                                12.verticalSpace,
+                                Text(
+                                  'Track scores. Switch teams.\nPlay fast.',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.6),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      // Actions Section
+                      Column(
+                        children: [
+                          // Primary Action
+                          _ActionButton(
+                            onPressed: () {
+                              context.push('/players');
+                            },
+                            icon: Icons.play_circle_filled_rounded,
+                            label: 'START NEW SESSION',
+                            isPrimary: true,
+                          ),
+                          16.verticalSpace,
+                          // Secondary Action
+                          _ActionButton(onPressed: () {}, icon: Icons.history_rounded, label: 'SESSION HISTORY', isPrimary: false),
+                          24.verticalSpace,
+                          // Footer Stats
+                          BlocBuilder<SessionCubit, SessionState>(
+                            builder: (context, state) {
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                decoration: BoxDecoration(
+                                  color: isDark ? Colors.black.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(100.r),
+                                  border: Border.all(color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.1)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.emoji_events_rounded, color: AppTheme.accentGold, size: 20.sp),
+                                    8.horizontalSpace,
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Total Sessions Played: ',
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: (isDark ? Colors.white : AppTheme.textDark).withValues(alpha: 0.5),
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: "${state.countStatus == UseCaseStatus.success ? state.count : '...'}",
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppTheme.textDark),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          );
-        },
-      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -72,6 +72,15 @@ class SessionModel extends Session {
     );
   }
 
+  SessionModel updateScore({required int points, required String winningTeamName}) {
+    if (winningTeamName.trim() == team1Name.trim()) {
+      return copyWith(team1Score: team1Score + points);
+    } else if (winningTeamName.trim() == team2Name.trim()) {
+      return copyWith(team2Score: team2Score + points);
+    }
+    return this;
+  }
+
   Map<String, dynamic> toFirestore() {
     return {
       'date': Timestamp.fromDate(date),

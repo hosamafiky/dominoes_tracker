@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dominoes_tracker/features/sessions/domain/entities/round.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/session.dart';
@@ -35,40 +36,44 @@ class SessionRepositoryImpl implements SessionRepository {
   Stream<Either<Failure, Session>> watchSession(String sessionId) {
     return remoteDataSource
         .watchSession(sessionId)
-        .map<Either<Failure, Session>>((session) {
-          return Right(session);
-        })
-        .handleError((error) {
-          return Left(ServerFailure(error.toString()));
-        });
+        .map<Either<Failure, Session>>((session) => Right(session))
+        .handleError((error) => Left(ServerFailure(error.toString())));
   }
 
   @override
-  Future<Either<Failure, String>> startSession(Session session) async {
+  Stream<Either<Failure, List<Round>>> watchRounds(String sessionId) {
+    return remoteDataSource
+        .watchRounds(sessionId)
+        .map<Either<Failure, List<Round>>>((rounds) => Right(rounds))
+        .handleError((error) => Left(ServerFailure(error.toString())));
+  }
+
+  @override
+  Future<Either<Failure, Session>> startSession(Session session) async {
     try {
       final model = SessionModel.fromEntity(session);
-      final id = await remoteDataSource.startSession(model);
-      return Right(id);
+      final newSession = await remoteDataSource.startSession(model);
+      return Right(newSession);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, void>> addRound(String sessionId, String winningTeam, int points) async {
+  Future<Either<Failure, Round>> addRound(String sessionId, String winningTeam, int points) async {
     try {
-      await remoteDataSource.addRound(sessionId, {'winningTeamName': winningTeam, 'points': points, 'timestamp': DateTime.now()});
-      return const Right(null);
+      final round = await remoteDataSource.addRound(sessionId, {'winningTeamName': winningTeam, 'points': points, 'timestamp': DateTime.now()});
+      return Right(round);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, void>> completeSession(String sessionId) async {
+  Future<Either<Failure, Session>> completeSession(String sessionId) async {
     try {
-      await remoteDataSource.completeSession(sessionId);
-      return const Right(null);
+      final session = await remoteDataSource.completeSession(sessionId);
+      return Right(session);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dominoes_tracker/features/sessions/domain/entities/round.dart';
 import 'package:dominoes_tracker/features/sessions/domain/usecases/get_total_sessions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import '../../domain/entities/session.dart';
 import '../../domain/usecases/add_round.dart';
 import '../../domain/usecases/complete_session.dart';
 import '../../domain/usecases/start_session.dart';
+import '../../domain/usecases/watch_rounds.dart';
 import '../../domain/usecases/watch_session.dart';
 
 part 'session_state.dart';
@@ -20,17 +22,20 @@ class SessionCubit extends Cubit<SessionState> {
   final GetTotalSessions getTotalSessionsUseCase;
   final AddRound addRoundUseCase;
   final WatchSession watchSessionUseCase;
+  final WatchRounds watchRoundsUseCase;
   final CompleteSession completeSessionUseCase;
   final GetPlayers getPlayersUseCase;
   final AddPlayer addPlayerUseCase;
 
   StreamSubscription? _sessionSubscription;
+  StreamSubscription? _roundsSubscription;
 
   SessionCubit({
     required this.getTotalSessionsUseCase,
     required this.startSessionUseCase,
     required this.addRoundUseCase,
     required this.watchSessionUseCase,
+    required this.watchRoundsUseCase,
     required this.completeSessionUseCase,
     required this.getPlayersUseCase,
     required this.addPlayerUseCase,
@@ -65,16 +70,23 @@ class SessionCubit extends Cubit<SessionState> {
       team2PlayerIds: team2PlayerIds,
     );
     final result = await startSessionUseCase(session);
-    result.fold((failure) => emit(state.copyWith(sessionStatus: UseCaseStatus.failure, sessionError: failure.message)), (sessionId) => watchSession(sessionId));
+    result.fold((failure) => emit(state.copyWith(sessionStatus: UseCaseStatus.failure, sessionError: failure.message)), (session) => watchSession(session.id));
   }
 
   void watchSession(String sessionId) {
     _sessionSubscription?.cancel();
     _sessionSubscription = watchSessionUseCase(sessionId).listen((result) {
-      print(result);
       result.fold(
         (failure) => emit(state.copyWith(sessionStatus: UseCaseStatus.failure, sessionError: failure.message)),
         (session) => emit(state.copyWith(sessionStatus: UseCaseStatus.success, session: session)),
+      );
+    });
+
+    _roundsSubscription?.cancel();
+    _roundsSubscription = watchRoundsUseCase(sessionId).listen((result) {
+      result.fold(
+        (failure) => emit(state.copyWith(roundsStatus: UseCaseStatus.failure, roundsError: failure.message)),
+        (rounds) => emit(state.copyWith(roundsStatus: UseCaseStatus.success, rounds: rounds)),
       );
     });
   }
@@ -83,7 +95,10 @@ class SessionCubit extends Cubit<SessionState> {
     final state = this.state;
     if (state.sessionStatus == UseCaseStatus.success && state.session != null) {
       final result = await addRoundUseCase(state.session!.id, winningTeam, points);
-      result.fold((failure) => emit(state.copyWith(sessionStatus: UseCaseStatus.failure, sessionError: failure.message)), (_) {});
+      result.fold(
+        (failure) => emit(state.copyWith(addRoundStatus: UseCaseStatus.failure, addRoundError: failure.message)),
+        (round) => emit(state.copyWith(addRoundStatus: UseCaseStatus.success)),
+      );
     }
   }
 
@@ -101,6 +116,7 @@ class SessionCubit extends Cubit<SessionState> {
   @override
   Future<void> close() {
     _sessionSubscription?.cancel();
+    _roundsSubscription?.cancel();
     return super.close();
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/enums/usecase_status.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../domain/entities/session.dart';
 import '../cubit/session_cubit.dart';
 import '../widgets/add_round_action.dart';
 import '../widgets/game_history.dart';
@@ -37,12 +38,15 @@ class LiveGamePage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<SessionCubit, SessionState>(
-        builder: (context, state) {
-          if (state.sessionStatus == UseCaseStatus.initial || state.sessionStatus == UseCaseStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state.sessionStatus == UseCaseStatus.success && state.session != null) {
-            final session = state.session!;
+      body: BlocSelector<SessionCubit, SessionState, ({UseCaseStatus sessionStatus, String? sessionError, Session? session})>(
+        selector: (state) => (sessionStatus: state.sessionStatus, sessionError: state.sessionError, session: state.session),
+        builder: (context, data) {
+          final status = data.sessionStatus;
+          final error = data.sessionError;
+          final session = data.session;
+          if (status == UseCaseStatus.initial || status == UseCaseStatus.loading) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else if (status == UseCaseStatus.success && session != null) {
             return Column(
               children: [
                 Scoreboard(session: session),
@@ -53,9 +57,9 @@ class LiveGamePage extends StatelessWidget {
                 AddRoundAction(session: session),
               ],
             );
-          } else if (state.sessionStatus == UseCaseStatus.failure && state.sessionError != null) {
+          } else if (status == UseCaseStatus.failure && error != null) {
             return Center(
-              child: Text(state.sessionError!, style: const TextStyle(color: Colors.red)),
+              child: Text(error, style: const TextStyle(color: Colors.red)),
             );
           }
           return const Center(child: Text('Initializing session...'));

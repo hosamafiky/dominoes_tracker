@@ -18,7 +18,10 @@ class AppRouter {
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
-      GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => BlocProvider(create: (context) => di.sl<SessionCubit>()..loadSessionsCount(), child: const SplashScreen()),
+      ),
       GoRoute(
         path: '/players',
         builder: (context, state) => BlocProvider(create: (context) => di.sl<PlayersCubit>(), child: const PlayersPage()),

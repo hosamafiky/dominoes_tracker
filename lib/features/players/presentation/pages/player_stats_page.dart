@@ -18,13 +18,11 @@ class PlayerStatsPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Player Stats', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight).withValues(alpha: 0.95),
         elevation: 0,
-        scrolledUnderElevation: 0,
         leading: Padding(
           padding: EdgeInsets.all(8.dg),
           child: Container(
@@ -46,7 +44,7 @@ class PlayerStatsPage extends StatelessWidget {
           return Skeletonizer(
             enabled: isLoading,
             child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(20.w, 100.h, 20.w, 40.h),
+              padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 40.h),
               child: Column(
                 children: [
                   PlayerProfileHeader(),

@@ -9,7 +9,7 @@ class StartSession {
 
   StartSession(this.repository);
 
-  Future<Either<Failure, String>> call(Session params) async {
+  Future<Either<Failure, Session>> call(Session params) async {
     return await repository.startSession(params);
   }
 }
