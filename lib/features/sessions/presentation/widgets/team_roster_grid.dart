@@ -1,58 +1,62 @@
+import 'package:dominoes_tracker/core/widgets/app_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../players/domain/entities/player.dart';
 
 class TeamRosterGrid extends StatelessWidget {
-  const TeamRosterGrid({super.key});
+  const TeamRosterGrid({super.key, required this.team1, required this.team2});
+
+  final List<Player> team1;
+  final List<Player> team2;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: TeamCard(teamName: 'Team A', accentColor: AppTheme.primary, p1: 'Julian', p2: 'Sarah', isFocus: true),
+          child: TeamCard(teamName: 'Team A', accentColor: AppTheme.primary, players: team1, isFocus: true),
         ),
         12.horizontalSpace,
         Expanded(
-          child: TeamCard(teamName: 'Team B', accentColor: AppTheme.accentGold, p1: 'Marcus', p2: 'David'),
+          child: TeamCard(teamName: 'Team B', accentColor: AppTheme.accentGold, players: team2),
         ),
       ],
     );
   }
 }
 
-class TeamCard extends StatelessWidget {
+class TeamCard extends StatefulWidget {
   final String teamName;
   final Color accentColor;
-  final String p1;
-  final String p2;
+  final List<Player> players;
   final bool isFocus;
 
-  const TeamCard({super.key, required this.teamName, required this.accentColor, required this.p1, required this.p2, this.isFocus = false});
+  const TeamCard({super.key, required this.teamName, required this.accentColor, required this.players, this.isFocus = false});
 
+  @override
+  State<TeamCard> createState() => _TeamCardState();
+}
+
+class _TeamCardState extends State<TeamCard> {
+  late String teamName = widget.teamName;
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = isFocus ? (isDark ? const Color(0xFF152015) : Colors.white) : (isDark ? const Color(0xFF1A1A1A) : Colors.white);
+    final bg = widget.isFocus ? (isDark ? const Color(0xFF152015) : Colors.white) : (isDark ? const Color(0xFF1A1A1A) : Colors.white);
 
     return Container(
       padding: EdgeInsets.all(16.dg),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: isFocus ? accentColor.withValues(alpha: 0.2) : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[100]!)),
+        border: Border.all(
+          color: widget.isFocus ? widget.accentColor.withValues(alpha: 0.2) : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[100]!),
+        ),
       ),
       child: Stack(
         children: [
-          Positioned(
-            top: -10,
-            right: -10,
-            child: Text(
-              teamName.substring(5),
-              style: TextStyle(fontSize: 48.sp, fontWeight: FontWeight.w900, color: Colors.white.withValues(alpha: 0.03)),
-            ),
-          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -61,15 +65,15 @@ class TeamCard extends StatelessWidget {
                 children: [
                   Text(
                     teamName.toUpperCase(),
-                    style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: accentColor, letterSpacing: 1.w),
+                    style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: widget.accentColor, letterSpacing: 1.w),
                   ),
                   Icon(Icons.more_horiz, size: 16.sp, color: Colors.white.withValues(alpha: 0.2)),
                 ],
               ),
               16.verticalSpace,
-              _PlayerRow(name: p1, role: 'Host', isHost: true),
-              12.verticalSpace,
-              _PlayerRow(name: p2, role: 'Rookie', isHost: false),
+              Column(
+                children: widget.players.indexed.map((e) => _PlayerRow(player: e.$2, role: e.$1 == 0 ? 'Host' : 'Player', isHost: e.$1 == 0)).toList(),
+              ),
             ],
           ),
         ],
@@ -79,12 +83,11 @@ class TeamCard extends StatelessWidget {
 }
 
 class _PlayerRow extends StatelessWidget {
-  final String name;
+  final Player player;
   final String role;
   final bool isHost;
 
-  const _PlayerRow({required this.name, required this.role, required this.isHost});
-
+  const _PlayerRow({required this.player, required this.role, required this.isHost});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -102,7 +105,7 @@ class _PlayerRow extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100.r),
-                child: Icon(Icons.person, size: 20.sp, color: Colors.grey[300]),
+                child: AppCachedImage(imageUrl: player.avatarUrl!),
               ),
             ),
             if (isHost)
@@ -122,7 +125,7 @@ class _PlayerRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                player.name,
                 style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: Colors.white),
               ),
               Text(

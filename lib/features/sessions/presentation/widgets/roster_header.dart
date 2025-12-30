@@ -8,35 +8,42 @@ class SessionActionChip extends StatelessWidget {
   final Color bg;
   final Color textColor;
   final bool hasPulse;
+  final VoidCallback? onTap;
 
-  const SessionActionChip({super.key, required this.label, required this.bg, required this.textColor, this.hasPulse = false});
+  const SessionActionChip({super.key, required this.label, required this.bg, required this.textColor, this.hasPulse = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: bg == Colors.transparent ? (isDark ? AppTheme.surfaceHighlight : Colors.grey[200]!) : bg,
-        borderRadius: BorderRadius.circular(8.r),
-        boxShadow: hasPulse ? [BoxShadow(color: AppTheme.accentGold.withValues(alpha: 0.3), blurRadius: 10.r, offset: const Offset(0, 0))] : null,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasPulse) ...[Icon(Icons.shuffle, size: 12.sp, color: textColor), 4.horizontalSpace],
-          Text(
-            label,
-            style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800, color: textColor),
-          ),
-        ],
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: bg == Colors.transparent ? (isDark ? AppTheme.surfaceHighlight : Colors.grey[200]!) : bg,
+          borderRadius: BorderRadius.circular(8.r),
+          boxShadow: hasPulse ? [BoxShadow(color: AppTheme.accentGold.withValues(alpha: 0.3), blurRadius: 10.r, offset: const Offset(0, 0))] : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (hasPulse) ...[Icon(Icons.shuffle, size: 12.sp, color: textColor), 4.horizontalSpace],
+            Text(
+              label,
+              style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800, color: textColor),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class RosterHeader extends StatelessWidget {
-  const RosterHeader({super.key});
+  const RosterHeader({super.key, this.onRandomizeTap, this.onManualTap});
+
+  final VoidCallback? onRandomizeTap;
+  final VoidCallback? onManualTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +56,9 @@ class RosterHeader extends StatelessWidget {
         ),
         Row(
           children: [
-            const SessionActionChip(label: 'Manual', bg: Colors.transparent, textColor: Colors.grey),
+            SessionActionChip(label: 'Manual', bg: Colors.transparent, textColor: Colors.grey, onTap: onManualTap),
             8.horizontalSpace,
-            const SessionActionChip(label: 'Randomize', bg: AppTheme.accentGold, textColor: Colors.black, hasPulse: true),
+            SessionActionChip(label: 'Randomize', bg: AppTheme.accentGold, textColor: Colors.black, hasPulse: true, onTap: onRandomizeTap),
           ],
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:dominoes_tracker/features/players/domain/entities/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,6 +30,18 @@ class _SessionSetupPageState extends State<SessionSetupPage> {
   int playersPerTeam = 2;
   int scoreLimit = 100;
 
+  List<Player> team1 = [];
+  List<Player> team2 = [];
+
+  void _updateRoster(List<Player> players) {
+    final allPlayers = players.toList()..shuffle();
+    final halfSize = (allPlayers.length / 2).ceil();
+    setState(() {
+      team1 = allPlayers.take(halfSize).toList();
+      team2 = allPlayers.skip(halfSize).toList();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,17 +54,28 @@ class _SessionSetupPageState extends State<SessionSetupPage> {
     final now = DateTime.now();
     final dateStr = DateFormat('EEEE, MMM d • h:mm a').format(now);
 
-    return BlocListener<SessionCubit, SessionState>(
-      listener: (context, state) {
-        final route = ModalRoute.of(context)!;
-        final isCurrent = route.isCurrent;
-        if (!isCurrent) return;
-        if (state.sessionStatus == UseCaseStatus.success && state.session != null) {
-          context.push('/live-game/${state.session!.id}');
-        } else if (state.sessionStatus == UseCaseStatus.failure && state.sessionError != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.sessionError!), backgroundColor: Colors.red));
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SessionCubit, SessionState>(
+          listener: (context, state) {
+            final route = ModalRoute.of(context)!;
+            final isCurrent = route.isCurrent;
+            if (!isCurrent) return;
+            if (state.sessionStatus == UseCaseStatus.success && state.session != null) {
+              context.push('/live-game/${state.session!.id}');
+            } else if (state.sessionStatus == UseCaseStatus.failure && state.sessionError != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.sessionError!), backgroundColor: Colors.red));
+            }
+          },
+        ),
+        BlocListener<PlayersCubit, PlayersState>(
+          listener: (context, state) {
+            if (state is PlayersLoaded) {
+              _updateRoster(state.players);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
         body: Stack(
@@ -81,9 +105,9 @@ class _SessionSetupPageState extends State<SessionSetupPage> {
                             },
                           ),
                           24.verticalSpace,
-                          const RosterHeader(),
+                          RosterHeader(onRandomizeTap: () => _updateRoster(team1..addAll(team2)), onManualTap: () {}),
                           16.verticalSpace,
-                          const TeamRosterGrid(),
+                          TeamRosterGrid(team1: team1, team2: team2),
                           160.verticalSpace,
                         ],
                       ),
@@ -96,25 +120,12 @@ class _SessionSetupPageState extends State<SessionSetupPage> {
               builder: (context, state) => SessionFooter(
                 sessionStatus: state.sessionStatus,
                 onCreateSession: () {
-                  final playersState = context.read<PlayersCubit>().state;
-                  List<String> team1Ids = [];
-                  List<String> team2Ids = [];
-                  if (playersState is PlayersLoaded) {
-                    final selected = playersState.players.where((p) => p.isSelected).toList();
-                    if (selected.isNotEmpty) {
-                      // simple logic: first half to team 1, second half to team 2
-                      int mid = (selected.length / 2).ceil();
-                      team1Ids = selected.take(mid).map((p) => p.id).toList();
-                      team2Ids = selected.skip(mid).map((p) => p.id).toList();
-                    }
-                  }
-
                   context.read<SessionCubit>().createSession(
                     team1Name: isTeamMode ? 'Team A' : 'Player 1',
                     team2Name: isTeamMode ? 'Team B' : 'Player 2',
                     limit: scoreLimit,
-                    team1PlayerIds: team1Ids,
-                    team2PlayerIds: team2Ids,
+                    team1PlayerIds: team1.map((p) => p.id).toList(),
+                    team2PlayerIds: team2.map((p) => p.id).toList(),
                   );
                 },
               ),
